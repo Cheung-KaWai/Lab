@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  cursor: none;
 }
 
 html {
@@ -12,6 +13,7 @@ body {
   width: 100vw;
   height: 100vh;
   font-size: 1.6rem;
+  overflow: hidden;
 }
 
 #root {

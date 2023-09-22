@@ -1,13 +1,8 @@
-import { useFrame } from "@react-three/fiber";
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 
 // Clamp number between two values with the following line:
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-const lerp = (a, b, alpha) => {
-  return a + alpha * (b - a);
-};
 
 export const ImageSlider = () => {
   const [progress, setProgress] = useState(0);
@@ -40,6 +35,12 @@ export const ImageSlider = () => {
     setDragging(false);
   };
 
+  const handleResize = () => {
+    setProgress(0);
+    setNormalizedProgress(0);
+    setMaxScroll(wrapperRef.current.clientWidth - window.innerWidth);
+  };
+
   useEffect(() => {
     //set scroll max width
     setMaxScroll(wrapperRef.current.clientWidth - window.innerWidth);
@@ -48,11 +49,16 @@ export const ImageSlider = () => {
     window.addEventListener("mousedown", handleToucheStart);
     window.addEventListener("mousemove", handleToucheMove);
     window.addEventListener("mouseup", handleTouchEnd);
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("mouseleave", handleTouchEnd);
 
+    //remove event listeners
     return () => {
       window.removeEventListener("mousedown", handleToucheStart);
       window.removeEventListener("mousemove", handleToucheMove);
       window.removeEventListener("mouseup", handleTouchEnd);
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mouseleave", handleTouchEnd);
     };
   }, [startX]);
 
@@ -63,12 +69,24 @@ export const ImageSlider = () => {
           ref={wrapperRef}
           offset={progress}
         >
-          <SliderItem dragging={dragging ? 0.8 : 1} />
-          <SliderItem dragging={dragging ? 0.8 : 1} />
-          <SliderItem dragging={dragging ? 0.8 : 1} />
-          <SliderItem dragging={dragging ? 0.8 : 1} />
-          <SliderItem dragging={dragging ? 0.8 : 1} />
-          <SliderItem dragging={dragging ? 0.8 : 1} />
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
+          <SliderItem dragging={dragging ? 0.8 : 1}>
+            <ItemImage src="/img/img.png" />
+          </SliderItem>
         </SliderWrapper>
       </Slider>
       <Progressbar bar={normalizedProgress} />
@@ -82,8 +100,7 @@ const Slider = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
-  background-color: red;
-  cursor: grab;
+  padding: 2vw;
 `;
 
 const SliderWrapper = styled.div.attrs((props) => ({
@@ -106,9 +123,8 @@ const SliderItem = styled.div.attrs((props) => ({
   width: 35vw;
   aspect-ratio: 4/3;
   flex-shrink: 0;
-  padding: 5vw;
-  background-color: blue;
-  transition: all 0.3s 0.1s ease-in-out;
+  padding: 2vw;
+  transition: all 0.3s 0.1s ease-in;
 `;
 
 const ItemImage = styled.img`
